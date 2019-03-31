@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--配置映射的mapper接口-->
+<mapper namespace="com.xuecheng.manage_course.mapper.CourseMapper">
+
+    <!--通过id查询-->
+    <select id="findCourseBaseById" parameterType="java.lang.String"
+            resultType="com.xuecheng.framework.domain.course.CourseBase">
+        select * from course_base where id = #{id}
+    </select>
+
+
+    <!--通过条件分页查询-->
+    <select id="findCourseListPage" parameterType="com.xuecheng.framework.domain.course.request.CourseListRequest"
+    resultMap="courseInfo" >
+        <!--resultType="com.xuecheng.framework.domain.course.ext.CourseInfo">-->
+        select
+        course_base.*,
+        (select pic from course_pic where courseid = course_base.id) pic
+        from
+        course_base
+        where 1 = 1
+        <if test="companyId != null and companyId != '' ">
+            and course_base.company_id = #{companyId}
+        </if>
+    </select>
+
+    <resultMap id="courseInfo" type="com.xuecheng.framework.domain.course.ext.CourseInfo">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="users" column="users"/>
+        <result property="mt" column="mt"/>
+        <result property="st" column="st"/>
+        <result property="grade" column="grade"/>
+        <result property="studymodel" column="studymodel"/>
+        <result property="teachmode" column="teachmode"/>
+        <result property="description" column="description"/>
+        <result property="status" column="status"/>
+        <result property="companyId" column="company_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="pic" column="pic"/>
+    </resultMap>
+
+</mapper>
